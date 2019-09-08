@@ -8,7 +8,6 @@ import {
   StyleSheet,
   AppState
 } from "react-native";
-// import AsyncStorage from '@react-native-community/async-storage';
 
 import GameScoreBoard from "../GameScoreBoard";
 import GameBlock from "../GameBlock";
@@ -27,6 +26,7 @@ import { explosionStlyes } from "../util/ExplosionStlyes";
 import { config } from "../util/Settings";
 import { images } from "../util/Images";
 import { util } from "../util/Util";
+import { connectedCorners } from "../util/ConnectedCorners";
 import { trainRestrictions } from "../util/Training";
 import { sounds } from "../Sounds";
 
@@ -593,6 +593,31 @@ const PlayGame = (props) => {
     colorAnimation.stopAnimation();
   })
 
+  const trainingBoxesSidesClick = {};
+  if(training !== "" && playerTurn === "first"){
+    const {yourMoves} = training;
+    if(yourMoves[0].type === "clickSide"){
+      const boxNumber = yourMoves[0].boxes[0];
+      const side = yourMoves[0].sides[0];
+      const corner = util.getCornersFromSide(side);
+      const boxCornerData = connectedCorners[boxNumber];
+      corner.map(data => {
+        if(trainingBoxesSidesClick[`box${boxNumber}`]){
+          trainingBoxesSidesClick[`box${boxNumber}`].push(data);
+        } else {
+          trainingBoxesSidesClick[`box${boxNumber}`] = [data];
+        }
+        boxCornerData[data].map(d => {
+          if(trainingBoxesSidesClick[`box${d.box}`]){
+            trainingBoxesSidesClick[`box${d.box}`].push(d.corner);
+          } else {
+            trainingBoxesSidesClick[`box${d.box}`] = [d.corner];
+          }
+        })
+      })
+    }
+  }
+
   return (<View style={styles.boardStyle}>
     <Image style={styles.imgStyle} source={images.background} />
 
@@ -674,6 +699,7 @@ const PlayGame = (props) => {
           startingLeft={startingLeft}
           startingBottom={startingBottom}
           navigation={props.navigation}
+          trainingBoxesSidesClick={trainingBoxesSidesClick}
           key={index} />)})}
     </View>
 

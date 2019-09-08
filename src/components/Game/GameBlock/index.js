@@ -56,7 +56,8 @@ const GameBlock = (props) => {
     blinkingBox,
     navigation,
     startingLeft,
-    startingBottom
+    startingBottom,
+    trainingBoxesSidesClick
   } = props;
 
   let stopAnimation;
@@ -115,6 +116,8 @@ const GameBlock = (props) => {
   let borderBottomWidth = (isBottomRightCornerBox || isBottomLeftCornerBox || isBottomSideRow) ? 2 : 1;
   let borderLeftWidth = (isTopLeftCornerBox || isBottomLeftCornerBox || isLeftSideRow) ? 2 : 1;
 
+  let cornerHighlights = trainingBoxesSidesClick[boxName] || [];
+
   const styles = {
     box: { // replace #F9A600 with letter when ok to animate
       backgroundColor: blinkingBox ? letterColor : (scoreColor || 'transparent'),
@@ -162,7 +165,7 @@ const GameBlock = (props) => {
       left: -6,
       height: 10,
       width: 10,
-      backgroundColor: "#270038",
+      backgroundColor: (cornerHighlights.includes("topLeft")) ? "#b57800" : "#270038",
       borderRadius: 2
     },
     topRight: {
@@ -171,7 +174,7 @@ const GameBlock = (props) => {
       right: -6,
       height: 10,
       width: 10,
-      backgroundColor: "#270038",
+      backgroundColor: (cornerHighlights.includes("topRight")) ? "#b57800" : "#270038",
       borderRadius: 2
     },
     bottomLeft: {
@@ -180,7 +183,7 @@ const GameBlock = (props) => {
       left: -6,
       height: 10,
       width: 10,
-      backgroundColor: "#270038",
+      backgroundColor: (cornerHighlights.includes("bottomLeft")) ? "#b57800" : "#270038",
       borderRadius: 2
     },
     bottomRight: {
@@ -189,7 +192,7 @@ const GameBlock = (props) => {
       bottom: -6,
       height: 10,
       width: 10,
-      backgroundColor: "#270038",
+      backgroundColor: (cornerHighlights.includes("bottomRight")) ? "#b57800" : "#270038",
       borderRadius: 2
     },
     yourScore: {
